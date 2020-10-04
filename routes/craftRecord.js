@@ -78,7 +78,6 @@ router.put('/addtocart/:servicekey',async function(req,res){
                             }else{
                                 updatedUser = user;
                                 updatedUser.save();
-                                console.log(user.record[0].name);
                                 res.json(user);
                             }
                     })
@@ -89,6 +88,47 @@ router.put('/addtocart/:servicekey',async function(req,res){
             }
     })
 //****************************************************************/
+
+//***************Delete request for remove item from cart********/
+router.delete('/removefromcart/:servicekey',function(req,res){
+    console.log("Removing item from craftList");
+    CraftRecord.findOne({servicekey : req.body.servicekey}, async(err,user) => {
+        if (err) {
+                res.json({ success: false, message: err }); // Return error
+        }else{
+            if (!user) {
+                        res.send("user is not registered");
+            }else{
+                var newrecord = user.record;
+                newrecord.forEach(element => {
+                    if(element._id == req.body.record._id){
+                        newrecord.pop(element);
+                    }
+                });
+                CraftRecord.findOneAndUpdate({servicekey:req.params.servicekey},
+                    {
+                        $set: {
+                            servicekey : req.body.servicekey,
+                            record : this.newrecord
+                        }
+                    },
+                        {
+                            new : true
+                        },
+                        function(err,updatedUser) {
+                            if(err) {
+                                res.send("Error updating user");
+                            }else{
+                                updatedUser = user;
+                                updatedUser.save();
+                                res.json(user);
+                            }
+                    })
+            }
+        }
+    })
+});
+//************************************************************* */
 
 //****Put request for place the order*****************************/
 router.put('/placeorder/:servicekey/:id',async function(req,res){

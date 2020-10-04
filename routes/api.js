@@ -6,6 +6,8 @@ const fs = require('fs');
 const { Buffer } = require('buffer');
 const Item = require('../models/item');
 const {itemValidation} = require('../models/validations')
+const xlsx2json = require('xlsx2json');
+const excelToJson = require('convert-excel-to-json');
 
 //*************************Storing Image in upload folder*******************/
 const storage = multer.diskStorage({
@@ -21,6 +23,21 @@ const storage = multer.diskStorage({
   const upload = multer({
     storage: storage
   });
+
+  const storageExcel = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'Excelfolder');
+    },
+    filename: function (req, file, cb) {
+      var datetimestamp = Date.now();
+      cb(null, 'excelFile.xlsx');
+    }
+  });
+
+  const uploadExcel = multer({
+    storage: storageExcel
+  });
+  
 //**************************************************************** */
 
 //*************Get request for all items****************************/
@@ -76,6 +93,28 @@ router.post('/item', upload.single('image'),(req,res) =>{
             }
 })
 //**************************************************************** */
+// router.post('/excelitem',uploadExcel.single('file'),(req,res)=>{
+//   const result = excelToJson({
+//     sourceFile: './Excelfolder/excelFile.xlsx',
+//     columnToKey: {
+//       A: 'name',
+//       B: 'description',
+//       C: 'price',
+//       D: 'quantity',
+//       E: 'image'
+//   }
+// });
+// result1 = [];
+// finalResult = [];
+// result1 = result['Sheet1']
+// result1.forEach(element => {
+//   if(element.name != 'name'){
+//     finalResult.push(element);
+//   }
+// });
+// console.log(finalResult)
+// res.send(finalResult);
+// })
 
 //*************************Update request for a item***************/
 router.put('/item/:id', upload.single('image'),function(req,res){

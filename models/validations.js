@@ -13,13 +13,23 @@ const craftValidation = data =>{
     const Schema = Joi.object({
         servicekey : Joi.required(),
         record : Joi.object({
+            _id : Joi.required()
+        })
+    });
+    return Schema.validate(data)
+}
+const orderValidation = (data) => {
+    const Schema = Joi.object({
+        servicekey : Joi.required(),
+        record : Joi.object({
             _id : Joi.required(),
-            orderQuantity : Joi.required(),
-            orderFlag : Joi.required(),
+            orderQuantity : Joi.required()
         })
     });
     return Schema.validate(data)
 }
 
+
 module.exports.itemValidation = itemValidation;
 module.exports.craftValidation = craftValidation;
+module.exports.orderValidation = orderValidation;

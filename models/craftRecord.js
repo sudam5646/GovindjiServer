@@ -5,9 +5,7 @@ var itemSchema = new mongoose.Schema({
     servicekey : {type : String},
     record: [
         {
-            _id : String,
-            orderQuantity : String,
-            orderFlag : String
+            _id : String
         }
     ]
 }); 
